@@ -38,8 +38,10 @@ class School(db.Model, SerializerMixin):
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
     educators = db.relationship('User', backref= 'classes')
+
     
-class Classes(db.Model, SerializerMixin):
+    
+class Class(db.Model, SerializerMixin):
 
     __tablename__ = "classes"
 
@@ -64,6 +66,7 @@ class Student_Class(db.Model, SerializerMixin):
 
     classes = db.relationship('Class', backref='student_classes')
     senders = db.relationship('User', backref= 'student_classes')
+
 
 
 class Attendance(db.Model, SerializerMixin):
