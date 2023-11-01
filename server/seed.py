@@ -53,6 +53,8 @@ with app.app_context():
 
         user = User(
             name=fake.name(),
+            phone_number = random.randint(10000000, 10000000000000),
+            photo = f'https://dummyimage.com/200x200/{random.randint(10, 100000)}',
             email_address=fake_email,
             password_hash=fake.password(),
             role_id=role_random.id
