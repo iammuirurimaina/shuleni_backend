@@ -193,8 +193,8 @@ with app.app_context():
     print('🦸‍♀️ Seeding chats...')
     
     chats = []
-    user_random = random.choice(users)
     for _ in range(2000):
+        user_random = random.choice(users)
         classes_random = random.choice(classes)
         chat = Chat(
             class_id = classes_random.id,
