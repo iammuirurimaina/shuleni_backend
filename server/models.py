@@ -13,17 +13,18 @@ class Role(db.Model, SerializerMixin):
 
 class User(db.Model, SerializerMixin):
 
-    __tablename__ = "users"
+    _tablename_ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
+    phone_number = db.Column(db.Integer, nullable=False)
+    photo = db.Column(db.String)
     email_address = db.Column(db.String, nullable=False, unique=True)
     password_hash = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, server_default=db.func.now())
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     role = db.relationship('Role', backref='users')
-
 
 class School(db.Model, SerializerMixin):
 
