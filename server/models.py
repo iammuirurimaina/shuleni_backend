@@ -52,8 +52,8 @@ class Class(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    educators = db.relationship('User', backref= 'classes')
-    schoools = db.relationship('School', backref = 'classes')
+    educators = db.relationship('User', backref= 'class')
+    schoools = db.relationship('School', backref = 'class')
 
 
 class Student_Class(db.Model, SerializerMixin):
