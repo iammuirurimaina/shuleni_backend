@@ -23,7 +23,10 @@ api = Api(app)
 def hello_world():
     return make_response(jsonify({'message': 'welcome to shuleni API'}), 200)
 
-#---------------------------LISTING DATA FROM MODELS--------------------------------
+
+
+#-------------------------------------------------USER ROUTES-----------------------------------------------------------------
+
 
 class Users(Resource):
     
@@ -96,6 +99,33 @@ class UserById(Resource):
         else:
             return make_response(jsonify({"error": "User not found"}), 404)
         
+    
+    def patch(self, id):
+        user = User.query.filter(User.id == id).first()
+        
+        if user:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(user, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            role = Role.query.filter_by(id = user.role_id).first()
+            user_dict ={
+                'id': user.id,
+                'name': user.name,
+                'phone_number': user.phone_number,
+                'photo': user.photo,
+                'email_adress': user.email_address,
+                'password_hash': user.password_hash,
+                'role_id': user.role_id,
+                'role': role.role
+            }
+            return make_response(jsonify(user_dict), 200)
+        else:
+            return make_response(jsonify({"error": "User not found"}), 404)
+        
         
     def delete(self, id):
         user = User.query.filter(User.id == id).first()
@@ -107,8 +137,9 @@ class UserById(Resource):
             return make_response(jsonify({"message": "User deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "User not found"}), 404)
+   
         
-      
+#-------------------------------------------------SCHOOL ROUTES-----------------------------------------------------------------
     
 class Schools(Resource):
     
@@ -174,6 +205,31 @@ class SchoolById(Resource):
         else:
             return make_response(jsonify({"error": "School not found"}), 404)
         
+    def patch(self, id):
+        school = School.query.filter_by(id = id).first()
+        
+        if school:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(school, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            owner = User.query.filter_by(id = school.owner_id).first()
+            school_dict ={
+            'id': school.id,
+            'school_name': school.school_name,
+            'poster': school.poster,
+            'location': school.location,
+            'owner_id': school.owner_id,
+            'created_at': school.created_at,
+            'owner_name': owner.name,
+            }
+            return make_response(jsonify(school_dict), 200)
+        else:
+            return make_response(jsonify({"error": "School not found"}), 404)
+          
         
     def delete(self, id):
         school = School.query.filter_by(id = id).first()
@@ -186,7 +242,9 @@ class SchoolById(Resource):
         else:
             return make_response(jsonify({"error": "School not found"}), 404)
      
-    
+     
+#-------------------------------------------------CLASS ROUTES-----------------------------------------------------------------
+
     
 class Classes(Resource):
     
@@ -254,6 +312,35 @@ class ClassById(Resource):
             return make_response(jsonify(class_rm_dict))
         else:
             return make_response(jsonify({"error": "Class not found"}), 404)
+        
+        
+    def patch(self, id):
+        class_rm = Class.query.filter_by(id=id).first()
+        
+        if class_rm:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(class_rm, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            educator = User.query.filter(User.id == class_rm.educator_id).first()
+            school = School.query.filter(School.id == class_rm.school_id).first()
+            class_rm_dict ={
+                'id': class_rm.id,
+                'class_name': class_rm.class_name,
+                'educator_id': class_rm.educator_id,
+                'school_id': class_rm.school_id,
+                'created_at': class_rm.created_at,
+                'educator': educator.name,
+                'school': school.school_name
+            }
+            return make_response(jsonify(class_rm_dict))
+        else:
+            return make_response(jsonify({"error": "Class not found"}), 404)
+        
+
         
     def delete(self, id):
         class_rm = Class.query.filter_by(id = id).first()
@@ -330,6 +417,33 @@ class StudentClassesId(Resource):
         else:
             return make_response(jsonify({"error": "Class not found"}), 404)
         
+        
+    def patch(self, id):
+        x = Student_Class.query.filter_by(id=id).first()
+        
+        if x:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(x, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            class_data = Class.query.filter(Class.id == x.class_id).first()
+            student = User.query.filter(User.id == x.student_id).first()
+            x_dict ={
+                'id': x.id,
+                'class_id': x.class_id,
+                'student_id': x.student_id,
+                'student': student.name,
+                'class': class_data.class_name,
+            }
+            return make_response(jsonify(x_dict))
+        else:
+            return make_response(jsonify({"error": "Class not found"}), 404)
+        
+
+        
     def delete(self, id):
         x = Student_Class.query.filter_by(id=id).first()
         
@@ -341,6 +455,9 @@ class StudentClassesId(Resource):
         else:
             return make_response(jsonify({"error": "Class not found"}), 404)
    
+   
+#-------------------------------------------------ATTENDANCE ROUTES-----------------------------------------------------------------
+
 
 class Attendances(Resource):
     
@@ -414,6 +531,36 @@ class AttendanceById(Resource):
         else:
             return make_response(jsonify({"error": "Attendance not found"}), 404)
         
+        
+    def patch(self, id):
+        attendance = Attendance.query.filter_by(id=id).first()
+        
+        if attendance:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(attendance, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            class_data = Class.query.filter(Class.id == attendance.class_id).first()
+            student_data = User.query.filter(User.id == attendance.student_id).first()
+            student_nm = student_data.name
+            class_nm = class_data.class_name
+            attendance_dict= {
+                'id': attendance.id,
+                'class_id': attendance.class_id,
+                'student_id': attendance.student_id,
+                'date': attendance.date,
+                'is_present': attendance.is_present,
+                'student': student_nm,
+                'class': class_nm,
+            }
+            return make_response(jsonify(attendance_dict))
+        else:
+            return make_response(jsonify({"error": "Attendance not found"}), 404)
+
+        
     def delete(self, id):
         attendance = Attendance.query.filter_by(id=id).first()
         
@@ -424,6 +571,9 @@ class AttendanceById(Resource):
             return make_response(jsonify({"message": "Attendance deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "Attendance not found"}), 404)
+ 
+ 
+ #-------------------------------------------------RESOURCES ROUTES-----------------------------------------------------------------
  
     
 class Resources(Resource):
@@ -492,6 +642,33 @@ class ResourceById(Resource):
         else:
             return make_response(jsonify({"error": "Resource not found"}), 404)
         
+        
+    def patch(self, id):
+        resource = Resource_model.query.filter_by(id=id).first()
+        
+        if resource:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(resource, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            educator = User.query.filter_by( id = resource.educator_id ).first()
+            resource_dict ={
+                'id': resource.id,
+                'title': resource.title,
+                'type': resource.type,
+                'url': resource.url,
+                'content': resource.content,
+                'educator_id': resource.educator_id,
+                'educator': educator.name
+            }
+            return make_response(jsonify(resource_dict))
+        else:
+            return make_response(jsonify({"error": "Resource not found"}), 404)
+
+        
     def delete(self, id):
         resource = Resource_model.query.filter_by(id=id).first()
         
@@ -502,6 +679,9 @@ class ResourceById(Resource):
             return make_response(jsonify({"message": "Resource deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "Resource not found"}), 404)
+
+
+#-------------------------------------------------ASSESSMENTS ROUTES-----------------------------------------------------------------
  
 
 class Assessments(Resource):
@@ -575,6 +755,35 @@ class AssessmentsById(Resource):
         else:
             return make_response(jsonify({"error": "Assessment not found"}), 404)
         
+        
+    def patch(self, id):
+        assessment = Assessment.query.filter_by(id=id).first()
+        
+        if assessment:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(assessment, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            class_data = Class.query.filter(Class.id == assessment.class_id).first()
+            class_nm = class_data.class_name
+            assessment_dict ={
+                'id': assessment.id,
+                'class_id': assessment.class_id,
+                'title': assessment.title,
+                'body': assessment.body,
+                'start_time': assessment.start_time,
+                'end_time': assessment.end_time,
+                'duration':assessment.duration,
+                'class': class_nm
+            }
+            return make_response(jsonify(assessment_dict))
+        else:
+            return make_response(jsonify({"error": "Assessment not found"}), 404)
+
+    
     def delete(self, id):
         assessment = Assessment.query.filter_by(id=id).first()
         
@@ -648,7 +857,33 @@ class AssessmentResponseById(Resource):
             return make_response(jsonify(response_dict))
         else:
             return make_response(jsonify({"error": "Assessment_Response not found"}), 404)
+       
         
+    def patch(self, id):
+        response = Assessment_Response.query.filter_by(id=id).first()
+        
+        if response:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(response, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            student = User.query.filter_by(id = response.student_id).first()
+            response_dict = {
+                'id': response.id,
+                'assessment_id': response.assessment_id,
+                'student_id': response.student_id,
+                'submitted_time': response.submitted_time,
+                'work': response.work,
+                'student': student.name
+            }
+            return make_response(jsonify(response_dict))
+        else:
+            return make_response(jsonify({"error": "Assessment_Response not found"}), 404)
+
+    
     def delete(self, id):
         response = Assessment_Response.query.filter_by(id=id).first()
         
@@ -660,6 +895,9 @@ class AssessmentResponseById(Resource):
         else:
             return make_response(jsonify({"error": "Assessment_Response not found"}), 404)
  
+ 
+ #-------------------------------------------------CHATS ROUTES-----------------------------------------------------------------
+
 
 class Chats(Resource):
     
@@ -724,6 +962,31 @@ class ChatsById(Resource):
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
         
+    def patch(self, id):
+        chat = Chat.query.filter_by(id=id).first()
+        
+        if chat:
+            data = request.get_json()
+            
+            for attr in data:
+                setattr(chat, attr, data.get(attr))
+                
+            db.session.commit()
+            
+            host = User.query.filter(User.id == chat.sender).first()
+            class_room = Class.query.filter_by(id = chat.class_id).first()
+            chat_dict ={
+                'id': chat.id,
+                'class_id': chat.class_id,
+                'sender': chat.sender,
+                'message': chat.message,
+                'name': host.name,
+                'class': class_room.class_name
+            }
+            return make_response(jsonify(chat_dict))
+        else:
+            return make_response(jsonify({"error": "Chat not found"}), 404)
+
     def delete(self, id):
         chat = Chat.query.filter_by(id=id).first()
         
