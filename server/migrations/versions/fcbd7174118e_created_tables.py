@@ -1,8 +1,8 @@
-"""created tables
+"""Created tables
 
-Revision ID: c03fc8a05015
+Revision ID: fcbd7174118e
 Revises: 
-Create Date: 2023-10-31 12:42:35.349154
+Create Date: 2023-11-02 15:23:13.289753
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c03fc8a05015'
+revision = 'fcbd7174118e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,10 +26,12 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
+    sa.Column('phone_number', sa.Integer(), nullable=False),
+    sa.Column('photo', sa.String(), nullable=True),
     sa.Column('email_address', sa.String(), nullable=False),
-    sa.Column('password_hash', sa.String(), nullable=False),
-    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('password', sa.String(), nullable=False),
     sa.Column('role_id', sa.Integer(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.ForeignKeyConstraint(['role_id'], ['roles.id'], ),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email_address')
@@ -53,9 +55,7 @@ def upgrade():
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['owner_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('location'),
-    sa.UniqueConstraint('poster')
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('classes',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -73,8 +73,8 @@ def upgrade():
     sa.Column('class_id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=True),
     sa.Column('body', sa.String(), nullable=True),
-    sa.Column('start_time', sa.DateTime(), nullable=True),
-    sa.Column('end_time', sa.DateTime(), nullable=True),
+    sa.Column('start_time', sa.String(), nullable=True),
+    sa.Column('end_time', sa.String(), nullable=True),
     sa.Column('duration', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['class_id'], ['classes.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -83,7 +83,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('class_id', sa.Integer(), nullable=False),
     sa.Column('student_id', sa.String(), nullable=False),
-    sa.Column('date', sa.DateTime(), nullable=True),
+    sa.Column('date', sa.String(), nullable=True),
     sa.Column('is_present', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(['class_id'], ['classes.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['users.id'], ),
@@ -94,6 +94,7 @@ def upgrade():
     sa.Column('class_id', sa.Integer(), nullable=False),
     sa.Column('sender', sa.String(), nullable=False),
     sa.Column('message', sa.String(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.ForeignKeyConstraint(['class_id'], ['classes.id'], ),
     sa.ForeignKeyConstraint(['sender'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -110,7 +111,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('assessment_id', sa.Integer(), nullable=True),
     sa.Column('student_id', sa.String(), nullable=False),
-    sa.Column('submitted_time', sa.DateTime(), nullable=True),
+    sa.Column('submitted_time', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
     sa.Column('work', sa.String(), nullable=True),
     sa.ForeignKeyConstraint(['assessment_id'], ['assessments.id'], ),
     sa.ForeignKeyConstraint(['student_id'], ['users.id'], ),
