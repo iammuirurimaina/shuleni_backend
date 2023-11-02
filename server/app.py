@@ -41,7 +41,7 @@ class Users(Resource):
                 'phone_number': user.phone_number,
                 'photo': user.photo,
                 'email_adress': user.email_address,
-                'password_hash': user.password_hash,
+                'password': user.password,
                 'role_id': user.role_id,
                 'role': role_name
             }
@@ -56,7 +56,7 @@ class Users(Resource):
             phone_number = data.get('phone_number'),
             photo = data.get('photo'),
             email_address = data.get('email_address'),
-            password_hash = data.get('password_hash'),
+            password = data.get('password'),
             role_id = data.get('role_id'),
         )
         db.session.add(new_user)
@@ -69,7 +69,7 @@ class Users(Resource):
             'phone_number': new_user.phone_number,
             'photo': new_user.photo,
             'email_adress': new_user.email_address,
-            'password_hash': new_user.password_hash,
+            'password': new_user.password,
             'role_id': new_user.role_id,
             'role': role.role
         }
@@ -90,7 +90,7 @@ class UserById(Resource):
                 'phone_number': user.phone_number,
                 'photo': user.photo,
                 'email_adress': user.email_address,
-                'password_hash': user.password_hash,
+                'password': user.password,
                 'role_id': user.role_id,
                 'role': role.role
             }
@@ -118,7 +118,7 @@ class UserById(Resource):
                 'phone_number': user.phone_number,
                 'photo': user.photo,
                 'email_adress': user.email_address,
-                'password_hash': user.password_hash,
+                'password': user.password,
                 'role_id': user.role_id,
                 'role': role.role
             }
@@ -912,7 +912,8 @@ class Chats(Resource):
                 'sender': chat.sender,
                 'message': chat.message,
                 'name': host.name,
-                'class': class_room.class_name
+                'class': class_room.class_name,
+                'created_at': chat.created_at
             }
             list.append(chat_dict)
             
@@ -936,7 +937,8 @@ class Chats(Resource):
             'sender': new_chat.sender,
             'message': new_chat.message,
             'name': host.name,
-            'class': class_room.class_name
+            'class': class_room.class_name,
+            'created_at': new_chat.created_at
         }
         
         return make_response(jsonify(new_chat_dict), 200)
@@ -956,7 +958,8 @@ class ChatsById(Resource):
                 'sender': chat.sender,
                 'message': chat.message,
                 'name': host.name,
-                'class': class_room.class_name
+                'class': class_room.class_name,
+                'created_at': chat.created_at
             }
             return make_response(jsonify(chat_dict))
         else:
@@ -981,7 +984,8 @@ class ChatsById(Resource):
                 'sender': chat.sender,
                 'message': chat.message,
                 'name': host.name,
-                'class': class_room.class_name
+                'class': class_room.class_name,
+                'created_at': chat.created_at
             }
             return make_response(jsonify(chat_dict))
         else:

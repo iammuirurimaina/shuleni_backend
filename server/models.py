@@ -20,7 +20,7 @@ class User(db.Model, SerializerMixin):
     phone_number = db.Column(db.Integer, nullable=False)
     photo = db.Column(db.String)
     email_address = db.Column(db.String, nullable=False, unique=True)
-    password_hash = db.Column(db.String, nullable=False)
+    password = db.Column(db.String, nullable=False)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
@@ -33,8 +33,8 @@ class School(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer(), primary_key=True)
     school_name = db.Column(db.String, nullable=False)
-    poster = db.Column(db.String(), nullable=False, unique=True) 
-    location = db.Column(db.String, nullable=False, unique=True)
+    poster = db.Column(db.String(), nullable=False) 
+    location = db.Column(db.String, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable= False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
@@ -78,7 +78,7 @@ class Attendance(db.Model, SerializerMixin):
     id = db.Column(db.Integer(), primary_key=True)
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable= False)
     student_id = db.Column(db.String, db.ForeignKey('users.id'), nullable= False)
-    date = db.Column(db.DateTime)
+    date = db.Column(db.String)
     is_present = db.Column(db.Boolean)
 
     classes = db.relationship('Class', backref='attendances')
@@ -104,8 +104,8 @@ class Assessment(db.Model, SerializerMixin):
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable= False)
     title = db.Column(db.String)
     body = db.Column(db.String)
-    start_time = db.Column(db.DateTime)
-    end_time = db.Column(db.DateTime)
+    start_time = db.Column(db.String)
+    end_time = db.Column(db.String)
     duration = db.Column(db.Integer)
 
     classes = db.relationship('Class', backref='assessments')
@@ -118,7 +118,7 @@ class Assessment_Response(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessments.id'))
     student_id = db.Column(db.String, db.ForeignKey('users.id'), nullable= False)
-    submitted_time = db.Column(db.DateTime)
+    submitted_time = db.Column(db.DateTime, server_default=db.func.now())
     work = db.Column(db.String)
 
     asssessments = db.relationship('Assessment', backref='assesment_responses')
@@ -133,6 +133,7 @@ class Chat(db.Model, SerializerMixin):
     class_id = db.Column(db.Integer, db.ForeignKey('classes.id'), nullable= False)
     sender = db.Column(db.String, db.ForeignKey('users.id'), nullable= False)
     message = db.Column(db.String)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
 
     classes = db.relationship('Class', backref='chats')
     senders = db.relationship('User', backref= 'chats')

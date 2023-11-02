@@ -53,10 +53,10 @@ with app.app_context():
 
         user = User(
             name=fake.name(),
-            phone_number = random.randint(10000000, 10000000000000),
+            phone_number = fake.phone_number(),
             photo = f'https://dummyimage.com/200x200/{random.randint(10, 100000)}',
             email_address=fake_email,
-            password_hash=fake.password(),
+            password=fake.password(),
             role_id=role_random.id
         )
         users.append(user)
@@ -81,7 +81,7 @@ with app.app_context():
         used_posters.add(unique_poster)  # Mark the poster as used
 
         school = School(
-            school_name=fake.name(),
+            school_name=fake.company(),
             poster=unique_poster,
             location=fake.address(),
             owner_id=random_owner.id,
@@ -99,7 +99,7 @@ with app.app_context():
     for _ in range(400):
         school_random = random.choice(schools)
         class_bd = Class(
-            class_name = fake.name(),
+            class_name = fake.color_name(),
             educator_id = random.choice(educator).id,
             school_id = school_random.id,
         )
@@ -132,7 +132,7 @@ with app.app_context():
         attendance = Attendance(
             class_id = classes_random.id,
             student_id = random.choice(students).id,
-            date = datetime.now(),
+            date = "11-11-2023",
             is_present = fake.boolean(chance_of_getting_true=75)
         )
         attendances.append(attendance)
@@ -145,8 +145,8 @@ with app.app_context():
     resources =[]
     for _ in range(250):
         resource = Resource(
-            title = fake.name(),
-            type = fake.name(),
+            title = fake.sentence(),
+            type = fake.job(),
             url = fake.url(),
             content = fake.text(),
             educator_id = random.choice(educator).id
@@ -163,11 +163,11 @@ with app.app_context():
         classes_random = random.choice(classes)
         assesment = Assessment(
             class_id = classes_random.id,
-            title = fake.name(),
+            title = fake.sentence(),
             body = fake.text(),
-            start_time = datetime(2023, 10, 31, 9, 0, 0),
-            end_time = datetime(2023, 10, 31, 10, 0, 0),
-            duration = random.randint(120, 200)
+            start_time = '10:00',
+            end_time = '12:00',
+            duration = 120
         )
         assessments.append(assesment)
         
@@ -176,13 +176,12 @@ with app.app_context():
     
     print('🦸‍♀️ Seeding assessments_choice...')
     
-    assessment_random = random.choice(assessments)
     responses = []
     for _ in range(650):
+        assessment_random = random.choice(assessments)
         response = Assessment_Response(
             assessment_id = assessment_random.id,
             student_id = random.choice(students).id,
-            submitted_time = datetime(2023, 10, 31, 10, 0, 0),
             work = fake.text()
         )        
         responses.append(response)
