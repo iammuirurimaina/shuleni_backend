@@ -56,7 +56,7 @@ with app.app_context():
             phone_number = fake.phone_number(),
             photo = f'https://dummyimage.com/200x200/{random.randint(10, 100000)}',
             email_address=fake_email,
-            password=fake.password(),
+            password= 'helloworld',
             role_id=role_random.id
         )
         users.append(user)
