@@ -28,6 +28,8 @@ flask-bcrypt = "*"
 pyjwt = "*"
 ipdb = "*"
 honcho = "*"
+flask-socketio = "*"
+websockets = "*"
 
 [dev-packages]
 

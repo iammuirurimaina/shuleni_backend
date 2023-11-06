@@ -3,6 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from sqlalchemy import desc, asc
 from flask_cors import CORS
+from flask_socketio import SocketIO
 import jwt
 import datetime
 
@@ -20,6 +21,7 @@ migrate = Migrate(app, db)
 db.init_app(app)  
 api = Api(app)
 # CORS(app)
+socketio = SocketIO(app)
 
 
 @app.route('/')
@@ -918,6 +920,7 @@ class Chats(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chats_retrieved', chat_dict)
             list.append(chat_dict)
             
         return make_response(jsonify(list))
@@ -943,7 +946,7 @@ class Chats(Resource):
             'class': class_room.class_name,
             'created_at': new_chat.created_at
         }
-        
+        socketio.emit('new_chat_dict retrieved', new_chat_dict)
         return make_response(jsonify(new_chat_dict), 200)
 
 
@@ -964,6 +967,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -990,6 +994,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -1000,10 +1005,13 @@ class ChatsById(Resource):
         if chat:
             db.session.delete(chat)
             db.session.commit()
-            
+            socketio.emit('chat_deleted', chat)
             return make_response(jsonify({"message": "Chat deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
+
+#-------------------------------------------------LOGIN ROUTE-----------------------------------------------------------------
+
 
 class Login(Resource):
     
