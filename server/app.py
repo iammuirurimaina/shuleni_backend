@@ -315,6 +315,29 @@ class ClassById(Resource):
             return make_response(jsonify(class_rm_dict))
         else:
             return make_response(jsonify({"error": "Class not found"}), 404)
+            
+    def post(self):
+        data = request.get_json()
+        new_class = Class(
+            class_name=data.get('class_name'),
+            educator_id=data.get('educator_id'),
+            school_id=data.get('school_id'),
+        )
+        db.session.add(new_class)
+        db.session.commit()
+
+        educator = User.query.filter_by(id=new_class.educator_id).first()
+        school = School.query.filter_by(id=new_class.school_id).first()
+        new_class_dict = {
+            'id': new_class.id,
+            'class_name': new_class.class_name,
+            'educator_id': new_class.educator_id,
+            'school_id': new_class.school_id,
+            'created_at': new_class.created_at,
+            'educator': educator.name,
+            'school': school.school_name
+        }
+        return make_response(jsonify(new_class_dict), 200)
         
         
     def patch(self, id):
@@ -669,7 +692,31 @@ class ResourceById(Resource):
             }
             return make_response(jsonify(resource_dict))
         else:
-            return make_response(jsonify({"error": "Resource not found"}), 404)
+            return make_response(jsonify({"error": "Resource not found"}), 404) 
+            
+    def post(self):
+        data = request.get_json()
+        new_resource = Resource_model(
+            title=data.get('title'),
+            type=data.get('type'),
+            url=data.get('url'),
+            content=data.get('content'),
+            educator_id=data.get('educator_id'),
+        )
+        db.session.add(new_resource)
+        db.session.commit()
+
+        educator = User.query.filter_by(id=new_resource.educator_id).first()
+        new_resource_dict = {
+            'id': new_resource.id,
+            'title': new_resource.title,
+            'type': new_resource.type,
+            'url': new_resource.url,
+            'content': new_resource.content,
+            'educator_id': new_resource.educator_id,
+            'educator': educator.name
+        }
+        return make_response(jsonify(new_resource_dict)),
 
         
     def delete(self, id):
