@@ -6,8 +6,10 @@ from flask_cors import CORS
 from flask_socketio import SocketIO
 import jwt
 import datetime
+from flask_swagger_ui import get_swaggerui_blueprint
 
-
+SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
 from models import db, User, School, Role, Assessment, Assessment_Response, Attendance, Chat, Class, Student_Class, Resource as Resource_model, bcrypt, check_password_hash
 
@@ -22,6 +24,24 @@ db.init_app(app)
 api = Api(app)
 # CORS(app)
 socketio = SocketIO(app)
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+    },
+    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+    #    'clientId': "your-client-id",
+    #    'clientSecret': "your-client-secret-if-required",
+    #    'realm': "your-realms",
+    #    'appName': "your-app-name",
+    #    'scopeSeparator': " ",
+    #    'additionalQueryStringParams': {'test': "hello"}
+    # }
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 
 @app.route('/')
@@ -1055,6 +1075,8 @@ api.add_resource(Resources, '/resources')
 api.add_resource(ResourceById, '/resource/<int:id>')
 api.add_resource(Assessments, '/assessments')
 api.add_resource(AssessmentsById, '/assessment/<int:id>')
+api.add_resource(AssessmentResponses, '/assessment_responses')
+api.add_resource(AssessmentResponseById, '/assessment_responses/<int:id>')
 api.add_resource(Chats, '/chats')
 api.add_resource(ChatsById, '/chat/<int:id>')
 api.add_resource(Login, '/login')
