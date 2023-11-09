@@ -258,6 +258,7 @@ class Classes(Resource):
             school_data = School.query.filter(School.id == class_rm.school_id).first()
             educator = educator_data.name
             school = school_data.school_name
+            
             class_dict ={
                 'id': class_rm.id,
                 'class_name': class_rm.class_name,
@@ -778,7 +779,7 @@ class Assessments(Resource):
             'start_time': new_assessment.start_time,
             'end_time': new_assessment.end_time,
             'duration':new_assessment.duration,
-            'class': class_rm.name      
+            'class': 'class'     
         }
         return make_response(jsonify(new_assessment_dict), 200)
 
@@ -1080,6 +1081,68 @@ class Login(Resource):
         else:
             return make_response(jsonify({'message': 'Login failed', 'error': 'User not found'}), 404)
 
+
+# class AddCourse(Resource):
+    
+#     def post(self):
+#         data = request.get_json()
+        
+#         if not data:
+#             return make_response(jsonify({"error": "Data is missing"}), 400)
+        
+#         course = Course(course_photo=data.get('course_photo'),
+#                         course_id=data.get('course_id'),
+#                         educator_id=data.get('educator_id'),
+#                         google_meet_link=data.get('google_meet_link'))
+        
+#         db.session.add(course)
+#         db.session.commit()
+        
+#         course_dict ={
+#             'course_id': course.course_id,
+#             'course_photo': course.course_photo,
+#             'educator_id': course.educator_id,
+#             'google_meet_link': course.google_meet_link
+#         }
+        
+#         return make_response(jsonify(course_dict), 201)
+
+# class EditCourse(Resource):
+    
+#     def patch(self, course_id):
+#         course = Course.query.filter(Course.course_id == course_id).first()
+        
+#         if course:
+#             data = request.get_json()
+            
+#             for attr in data:
+#                 setattr(course, attr, data.get(attr))
+                
+#             db.session.commit()
+            
+#             course_dict ={
+#                 'course_id': course.course_id,
+#                 'course_photo': course.course_photo,
+#                 'educator_id': course.educator_id,
+#                 'google_meet_link': course.google_meet_link
+#             }
+#             return make_response(jsonify(course_dict), 200)
+#         else:
+#             return make_response(jsonify({"error": "Course not found"}), 404)
+        
+# class DeleteCourse(Resource):
+    
+#     def delete(self, course_id):
+#         course = Course.query.filter(Course.course_id == course_id).first()
+        
+#         if course:
+#             db.session.delete(course)
+#             db.session.commit()
+            
+#             return make_response(jsonify({"message": "Course deleted successfully"}), 200)
+#         else:
+#             return make_response(jsonify({"error": "Course not found"}), 404)
+
 api.add_resource(Users, '/users')
 api.add_resource(UserById, '/user/<int:id>')
 api.add_resource(Schools, '/schools')
@@ -1097,6 +1160,12 @@ api.add_resource(AssessmentsById, '/assessment/<int:id>')
 api.add_resource(Chats, '/chats')
 api.add_resource(ChatsById, '/chat/<int:id>')
 api.add_resource(Login, '/login')
+
+
+# api.add_resource(AddCourse, '/addCourse')
+# api.add_resource(EditCourse, '/editCourse')
+# api.add_resource(DeleteCourse, '/deleteCourse')
+
 
 
 if __name__ == '__main__':
