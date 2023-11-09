@@ -3,10 +3,13 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from sqlalchemy import desc, asc
 from flask_cors import CORS
+from flask_socketio import SocketIO
 import jwt
 import datetime
+from flask_swagger_ui import get_swaggerui_blueprint
 
-
+SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
 from models import db, User, School, Role, Assessment, Assessment_Response, Attendance, Chat, Class, Student_Class, Resource as Resource_model, bcrypt, check_password_hash
 
@@ -20,6 +23,25 @@ migrate = Migrate(app, db)
 db.init_app(app)  
 api = Api(app)
 # CORS(app)
+socketio = SocketIO(app)
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+    },
+    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+    #    'clientId': "your-client-id",
+    #    'clientSecret': "your-client-secret-if-required",
+    #    'realm': "your-realms",
+    #    'appName': "your-app-name",
+    #    'scopeSeparator': " ",
+    #    'additionalQueryStringParams': {'test': "hello"}
+    # }
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 
 @app.route('/')
@@ -966,6 +988,7 @@ class Chats(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chats_retrieved', chat_dict)
             list.append(chat_dict)
             
         return make_response(jsonify(list))
@@ -991,7 +1014,7 @@ class Chats(Resource):
             'class': class_room.class_name,
             'created_at': new_chat.created_at
         }
-        
+        socketio.emit('new_chat_dict retrieved', new_chat_dict)
         return make_response(jsonify(new_chat_dict), 200)
 
 
@@ -1012,6 +1035,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -1038,6 +1062,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -1048,10 +1073,13 @@ class ChatsById(Resource):
         if chat:
             db.session.delete(chat)
             db.session.commit()
-            
+            socketio.emit('chat_deleted', chat)
             return make_response(jsonify({"message": "Chat deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
+
+#-------------------------------------------------LOGIN ROUTE-----------------------------------------------------------------
+
 
 class Login(Resource):
     
@@ -1157,7 +1185,11 @@ api.add_resource(Resources, '/resources')
 api.add_resource(ResourceById, '/resource/<int:id>')
 api.add_resource(Assessments, '/assessments')
 api.add_resource(AssessmentsById, '/assessment/<int:id>')
+
 api.add_resource(AssessmentResponses, '/responses')
+
+api.add_resource(AssessmentResponseById, '/assessment_responses/<int:id>')
+
 api.add_resource(Chats, '/chats')
 api.add_resource(ChatsById, '/chat/<int:id>')
 api.add_resource(Login, '/login')
