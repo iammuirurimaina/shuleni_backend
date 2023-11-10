@@ -1197,7 +1197,7 @@
         }
       }
     },
-    "/assessment_responses": {
+    "/responses": {
       "get": {
         "tags": [
           "assessment_response"

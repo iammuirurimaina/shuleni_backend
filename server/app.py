@@ -985,7 +985,7 @@ class Chats(Resource):
                 'sender': chat.sender,
                 'message': chat.message,
                 'name': host.name,
-                'class': class_room.class_name,
+                'class': 'class',
                 'created_at': chat.created_at
             }
             socketio.emit('chats_retrieved', chat_dict)
