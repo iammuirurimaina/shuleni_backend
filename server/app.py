@@ -3,10 +3,13 @@ from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from sqlalchemy import desc, asc
 from flask_cors import CORS
+from flask_socketio import SocketIO
 import jwt
 import datetime
+from flask_swagger_ui import get_swaggerui_blueprint
 
-
+SWAGGER_URL = '/api/docs'  # URL for exposing Swagger UI (without trailing '/')
+API_URL = '/static/swagger.json'  # Our API url (can of course be a local resource)
 
 from models import db, User, School, Role, Assessment, Assessment_Response, Attendance, Chat, Class, Student_Class, Resource as Resource_model, bcrypt, check_password_hash
 
@@ -20,6 +23,25 @@ migrate = Migrate(app, db)
 db.init_app(app)  
 api = Api(app)
 # CORS(app)
+socketio = SocketIO(app)
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    API_URL,
+    config={  # Swagger UI config overrides
+        'app_name': "Test application"
+    },
+    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
+    #    'clientId': "your-client-id",
+    #    'clientSecret': "your-client-secret-if-required",
+    #    'realm': "your-realms",
+    #    'appName': "your-app-name",
+    #    'scopeSeparator': " ",
+    #    'additionalQueryStringParams': {'test': "hello"}
+    # }
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 
 @app.route('/')
@@ -258,6 +280,7 @@ class Classes(Resource):
             school_data = School.query.filter(School.id == class_rm.school_id).first()
             educator = educator_data.name
             school = school_data.school_name
+            
             class_dict ={
                 'id': class_rm.id,
                 'class_name': class_rm.class_name,
@@ -778,7 +801,7 @@ class Assessments(Resource):
             'start_time': new_assessment.start_time,
             'end_time': new_assessment.end_time,
             'duration':new_assessment.duration,
-            'class': class_rm.name      
+            'class': 'class'     
         }
         return make_response(jsonify(new_assessment_dict), 200)
 
@@ -962,9 +985,10 @@ class Chats(Resource):
                 'sender': chat.sender,
                 'message': chat.message,
                 'name': host.name,
-                'class': class_room.class_name,
+                'class': 'class',
                 'created_at': chat.created_at
             }
+            socketio.emit('chats_retrieved', chat_dict)
             list.append(chat_dict)
             
         return make_response(jsonify(list))
@@ -990,7 +1014,7 @@ class Chats(Resource):
             'class': class_room.class_name,
             'created_at': new_chat.created_at
         }
-        
+        socketio.emit('new_chat_dict retrieved', new_chat_dict)
         return make_response(jsonify(new_chat_dict), 200)
 
 
@@ -1011,6 +1035,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -1037,6 +1062,7 @@ class ChatsById(Resource):
                 'class': class_room.class_name,
                 'created_at': chat.created_at
             }
+            socketio.emit('chat_dict retrieved', chat_dict)
             return make_response(jsonify(chat_dict))
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
@@ -1047,10 +1073,13 @@ class ChatsById(Resource):
         if chat:
             db.session.delete(chat)
             db.session.commit()
-            
+            socketio.emit('chat_deleted', chat)
             return make_response(jsonify({"message": "Chat deleted successfully"}), 200)
         else:
             return make_response(jsonify({"error": "Chat not found"}), 404)
+
+#-------------------------------------------------LOGIN ROUTE-----------------------------------------------------------------
+
 
 class Login(Resource):
     
@@ -1080,6 +1109,68 @@ class Login(Resource):
         else:
             return make_response(jsonify({'message': 'Login failed', 'error': 'User not found'}), 404)
 
+
+# class AddCourse(Resource):
+    
+#     def post(self):
+#         data = request.get_json()
+        
+#         if not data:
+#             return make_response(jsonify({"error": "Data is missing"}), 400)
+        
+#         course = Course(course_photo=data.get('course_photo'),
+#                         course_id=data.get('course_id'),
+#                         educator_id=data.get('educator_id'),
+#                         google_meet_link=data.get('google_meet_link'))
+        
+#         db.session.add(course)
+#         db.session.commit()
+        
+#         course_dict ={
+#             'course_id': course.course_id,
+#             'course_photo': course.course_photo,
+#             'educator_id': course.educator_id,
+#             'google_meet_link': course.google_meet_link
+#         }
+        
+#         return make_response(jsonify(course_dict), 201)
+
+# class EditCourse(Resource):
+    
+#     def patch(self, course_id):
+#         course = Course.query.filter(Course.course_id == course_id).first()
+        
+#         if course:
+#             data = request.get_json()
+            
+#             for attr in data:
+#                 setattr(course, attr, data.get(attr))
+                
+#             db.session.commit()
+            
+#             course_dict ={
+#                 'course_id': course.course_id,
+#                 'course_photo': course.course_photo,
+#                 'educator_id': course.educator_id,
+#                 'google_meet_link': course.google_meet_link
+#             }
+#             return make_response(jsonify(course_dict), 200)
+#         else:
+#             return make_response(jsonify({"error": "Course not found"}), 404)
+        
+# class DeleteCourse(Resource):
+    
+#     def delete(self, course_id):
+#         course = Course.query.filter(Course.course_id == course_id).first()
+        
+#         if course:
+#             db.session.delete(course)
+#             db.session.commit()
+            
+#             return make_response(jsonify({"message": "Course deleted successfully"}), 200)
+#         else:
+#             return make_response(jsonify({"error": "Course not found"}), 404)
+
 api.add_resource(Users, '/users')
 api.add_resource(UserById, '/user/<int:id>')
 api.add_resource(Schools, '/schools')
@@ -1094,9 +1185,20 @@ api.add_resource(Resources, '/resources')
 api.add_resource(ResourceById, '/resource/<int:id>')
 api.add_resource(Assessments, '/assessments')
 api.add_resource(AssessmentsById, '/assessment/<int:id>')
+
+api.add_resource(AssessmentResponses, '/responses')
+
+api.add_resource(AssessmentResponseById, '/assessment_responses/<int:id>')
+
 api.add_resource(Chats, '/chats')
 api.add_resource(ChatsById, '/chat/<int:id>')
 api.add_resource(Login, '/login')
+
+
+# api.add_resource(AddCourse, '/addCourse')
+# api.add_resource(EditCourse, '/editCourse')
+# api.add_resource(DeleteCourse, '/deleteCourse')
+
 
 
 if __name__ == '__main__':

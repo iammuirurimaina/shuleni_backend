@@ -1,0 +1,1776 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "     filters.",
+    "version": "1.0.0",
+    "title": "Swagger shuleni",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "apiteam@swagger.io"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "127.0.0.1:5555",
+  "tags": [
+    {
+      "name": "user",
+      "description": "Everything about users"
+    },
+    {
+      "name": "school",
+      "description": "Everything about schools"
+    },
+    {
+      "name": "class",
+      "description": "Everything about classes"
+    },
+    {
+      "name": "student_class",
+      "description": "Everything about students with their classes"
+    },
+    {
+      "name": "attendance",
+      "description": "Everything about attendances"
+    },
+    {
+      "name": "resource",
+      "description": "Everything about resources"
+    },
+    {
+      "name": "assessment",
+      "description": "Everything about assessments"
+    },
+    {
+      "name": "assessment_response",
+      "description": "Everything about assessment responses"
+    },
+    {
+      "name": "chat",
+      "description": "Everything about chats"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Returns users",
+        "description": "Returns all the users",
+        "operationId": "getusers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "description": "This can only be done by the owner.",
+        "operationId": "createUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user/{userid}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user by user ID",
+        "description": "",
+        "operationId": "getUserByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "The user ID that needs to be fetched. Use user1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Updated user by Id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUseryId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user By id",
+        "description": "This can only be done by the logged in owner.",
+        "operationId": "deleteUserById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/schools": {
+      "get": {
+        "tags": [
+          "school"
+        ],
+        "summary": "Returns schools",
+        "description": "Returns all the schools",
+        "operationId": "getschools",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "school"
+        ],
+        "summary": "Create school",
+        "description": "This can only be done by the owner.",
+        "operationId": "createSchool",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created school object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/School"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/school/{schoolid}": {
+      "get": {
+        "tags": [
+          "school"
+        ],
+        "summary": "Get school by school ID",
+        "description": "",
+        "operationId": "getSchoolByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schoolid",
+            "in": "path",
+            "description": "The school ID that needs to be fetched. Use School1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/School"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "School not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "school"
+        ],
+        "summary": "Updated school by Id",
+        "description": "This can only be done by the logged in owner.",
+        "operationId": "updateSchoolId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schoolid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated school object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/School"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "School not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "school"
+        ],
+        "summary": "Delete school By id",
+        "description": "This can only be done by the logged in owner.",
+        "operationId": "deleteSchoolById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "schoolid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "School not found"
+          }
+        }
+      }
+    },
+    "/classes": {
+      "get": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Returns classes",
+        "description": "Returns all the classes",
+        "operationId": "getclasses",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Create class",
+        "description": "This can only be done by the instructor.",
+        "operationId": "createclass",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created class object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Class"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/class/{classid}": {
+      "get": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Get class by class ID",
+        "description": "",
+        "operationId": "getClassByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "classid",
+            "in": "path",
+            "description": "The Class ID that needs to be fetched. Use Class1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Class"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Class not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Updated class by Id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "updateClassId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "classid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated class object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Class"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Class not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "class"
+        ],
+        "summary": "Delete class By id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "deleteClassById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "classid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Class not found"
+          }
+        }
+      }
+    },
+    "/student_classes": {
+      "get": {
+        "tags": [
+          "student_class"
+        ],
+        "summary": "Returns students with their classes",
+        "description": "Returns all the students with their classes",
+        "operationId": "getstudentsclasses",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "student_class"
+        ],
+        "summary": "Add students to classes",
+        "description": "This can only be done by the instructor.",
+        "operationId": "addstudenttoclass",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created student class object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Student_Class"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/student_class/{student_classid}": {
+      "get": {
+        "tags": [
+          "student_class"
+        ],
+        "summary": "Get student class by the ID",
+        "description": "",
+        "operationId": "getStudentClassByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "student_classid",
+            "in": "path",
+            "description": "The Student Class ID that needs to be fetched. Use Student_Class1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Student_Class"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Student Class not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "student_class"
+        ],
+        "summary": "Updated student class by Id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "updateStudentClassId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "student_classid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated class object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Student_Class"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Student Class not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "student_class"
+        ],
+        "summary": "Delete student class By id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteStudentClassById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "student_classid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Class not found"
+          }
+        }
+      }
+    },
+    "/attendance": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Returns the attendances",
+        "description": "Returns all the attendance",
+        "operationId": "getattendance",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Create attendance",
+        "description": "This can only be done by the instructor.",
+        "operationId": "createattendance",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created attendance object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Attendance"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/attendance/{attendanceid}": {
+      "get": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Get Attendance by ID",
+        "description": "",
+        "operationId": "getAttendanceByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "attendanceid",
+            "in": "path",
+            "description": "The Attendance ID that needs to be fetched. Use Attendance1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Attendance"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Attendance not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Updated Attendance by Id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "updateAttendanceId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "attendanceid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated attendance object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Attendance"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Attendance not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "attendance"
+        ],
+        "summary": "Delete attendance By id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "deleteAttendanceById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "attendanceid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Attendance not found"
+          }
+        }
+      }
+    },
+    "/resources": {
+      "get": {
+        "tags": [
+          "resource"
+        ],
+        "summary": "Returns the resources",
+        "description": "Returns all the resources",
+        "operationId": "getresources",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "resource"
+        ],
+        "summary": "Create resource",
+        "description": "This can only be done by the instructor.",
+        "operationId": "createresource",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created resource object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Resource"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/Resource/{resourceid}": {
+      "get": {
+        "tags": [
+          "resource"
+        ],
+        "summary": "Get Resource by ID",
+        "description": "",
+        "operationId": "getResourceByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "resourceid",
+            "in": "path",
+            "description": "The Resource ID that needs to be fetched. Use Resource1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Resource"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "resource"
+        ],
+        "summary": "Updated Resource by Id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "updateResourceId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "resourceid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated resource object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Resource"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "resource"
+        ],
+        "summary": "Delete resource By id",
+        "description": "This can only be done by the logged in instructor.",
+        "operationId": "deleteResourceById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "resourceid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/assessments": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Returns the assessment",
+        "description": "Returns all the assessments",
+        "operationId": "getassessments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Create assessments",
+        "description": "This can only be done by the instructor.",
+        "operationId": "createassessments",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created assessments object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/assessment/{assessmentid}": {
+      "get": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Get Assessment by ID",
+        "description": "",
+        "operationId": "getAssessmentByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessmentid",
+            "in": "path",
+            "description": "The Assessment ID that needs to be fetched. Use Assessments1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Updated Assessment by Id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateAssessmentId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessmentid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated assessment object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Assessment"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "assessment"
+        ],
+        "summary": "Delete Assessment By id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteAssessmentById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessmentid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment not found"
+          }
+        }
+      }
+    },
+    "/responses": {
+      "get": {
+        "tags": [
+          "assessment_response"
+        ],
+        "summary": "Returns the assessment_response",
+        "description": "Returns all the assessment responses",
+        "operationId": "getassessmentresponses",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "assessment_response"
+        ],
+        "summary": "Create assessment_response",
+        "description": "This can only be done by the student.",
+        "operationId": "createassessmentresponses",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created assessments responses object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Assessment_Response"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/assessment_responses/{assessment_responseid}": {
+      "get": {
+        "tags": [
+          "assessment_response"
+        ],
+        "summary": "Get Assessment Response by ID",
+        "description": "",
+        "operationId": "getAssessmentResponseByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessment_responseid",
+            "in": "path",
+            "description": "The Assessment Response ID that needs to be fetched. Use Assessment_Response1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Assessment_Response"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment Response not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "assessment_response"
+        ],
+        "summary": "Updated Assessment Response by Id",
+        "description": "This can only be done by the logged in student.",
+        "operationId": "updateAssessmentResponseId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessment_responseid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated assessment response object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Assessment_Response"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment Response not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "assessment_response"
+        ],
+        "summary": "Delete assessment response By id",
+        "description": "This can only be done by the logged in student.",
+        "operationId": "deleteAssessmentResponseById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "assessment_responseid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment Response not found"
+          }
+        }
+      }
+    },
+    "/chats": {
+      "get": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Returns the chat",
+        "description": "Returns all the chats",
+        "operationId": "getchats",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Create chat",
+        "description": "This can only be done by the user.",
+        "operationId": "createchats",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created assessments object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Chat"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/chat/{chatid}": {
+      "get": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Get Chat by ID",
+        "description": "",
+        "operationId": "getChatByID",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chatid",
+            "in": "path",
+            "description": "The Chat ID that needs to be fetched. Use Chats1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Chat"
+            }
+          },
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Chat not found"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Updated Chat by Id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateChatId",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chatid",
+            "in": "path",
+            "description": "name that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated chat object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Chat"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Assessment not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "chat"
+        ],
+        "summary": "Delete chat By id",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteChatById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "chatid",
+            "in": "path",
+            "description": "The name that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid id supplied"
+          },
+          "404": {
+            "description": "Chat not found"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "description": "",
+        "operationId": "loginUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "integer"
+        },
+        "photo": {
+          "type": "string"
+        },
+        "email_address": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "role_id": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "User"
+      }
+    },
+    "School": {
+      "type": "object",
+      "properties": {
+        "school_name": {
+          "type": "string"
+        },
+        "poster": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "owner_id": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "School"
+      }
+    },
+    "Class": {
+      "type": "object",
+      "properties": {
+        "class_name": {
+          "type": "string"
+        },
+        "educator_id": {
+          "type": "integer"
+        },
+        "school_id": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "Class"
+      }
+    },
+    "Student_Class": {
+      "type": "object",
+      "properties": {
+        "class_id": {
+          "type": "integer"
+        },
+        "student_id": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "Student_Class"
+      }
+    },
+    "Attendance": {
+      "type": "object",
+      "properties": {
+        "class_id": {
+          "type": "integer"
+        },
+        "student_id": {
+          "type": "integer"
+        },
+        "date": {
+          "type": "string"
+        },
+        "is_present": {
+          "type": "boolean"
+        }
+      },
+      "xml": {
+        "name": "Attendance"
+      }
+    },
+    "Resource": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "content": {
+          "type": "boolean"
+        },
+        "educator_id": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "Resource"
+      }
+    },
+    "Assessment": {
+      "type": "object",
+      "properties": {
+        "class_id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "body": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string"
+        },
+        "end_time": {
+          "type": "string"
+        },
+        "duration": {
+          "type": "integer"
+        }
+      },
+      "xml": {
+        "name": "Assessment"
+      }
+    },
+    "Assessment_Response": {
+      "type": "object",
+      "properties": {
+        "assessment_id": {
+          "type": "integer"
+        },
+        "student_id": {
+          "type": "integer"
+        },
+        "submitted_time": {
+          "type": "string"
+        },
+        "work": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Assessment_Response"
+      }
+    },
+    "Chat": {
+      "type": "object",
+      "properties": {
+        "class_id": {
+          "type": "integer"
+        },
+        "sender": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Chat"
+      }
+    },
+    "Login": {
+      "type": "object",
+      "properties": {
+        "email_address": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Login"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
