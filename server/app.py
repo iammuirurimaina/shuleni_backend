@@ -11,6 +11,10 @@ import datetime
 from models import db, User, School, Role, Assessment, Assessment_Response, Attendance, Chat, Class, Student_Class, Resource as Resource_model, bcrypt, check_password_hash
 
 app = Flask(__name__)
+# DATABASE_URI = ''
+# app.config['SQALCHEMY_DATABASE_URI'] = DATABASE_URI
+# app.config['SQALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.json.compact = False
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SECRET_KEY'] = 'bb8f7de46cd7426ebf3ca7df06d43665'
