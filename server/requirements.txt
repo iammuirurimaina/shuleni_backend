@@ -1,4 +1,4 @@
-[packages]
+
 flask = "*"
 flask-marshmallow = "*"
 flask-migrate = "*"
